@@ -1,2 +1,2 @@
 # AutoJava
-Keyboard/Mouse recorder
+Keyboard/Mouse recorder written in Java using the JNativeHook library.
