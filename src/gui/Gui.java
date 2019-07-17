@@ -168,7 +168,7 @@ public class Gui extends JFrame implements WindowListener, ActionListener, Prope
         }
         if (event.getSource() == Start) {
             System.out.println("Start Recording!");
-            FileTest g = new FileTest();
+            FileManager g = new FileManager();
             g.filemake();
             RecordMain rec = new RecordMain();
             rec.record();

@@ -7,7 +7,7 @@ import java.io.FileWriter;
 import java.io.BufferedWriter;
 import java.io.IOException;
 
-public class FileTest {
+public class FileManager {
     private static long time = 0;
     //public String fileloc = "";
     //TODO  When adding file locations, use this getter to relay the location to main class

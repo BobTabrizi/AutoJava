@@ -6,7 +6,7 @@ import org.jnativehook.NativeHookException;
 
 public class RecordMain {
     private static long time = 0;
-    ///public static String root = System.getProperty("user.dir") + "\\";
+    //TODO add dynamic file location
     public static String file = "C:\\Users\\Pancake\\IdeaProjects\\MainProg\\src\\Records\\tempScript.txt";
 
     public static String getFilePath() {
@@ -22,7 +22,7 @@ public class RecordMain {
         return RecordMain.time;
     }
 
-    //TODO Fill this out, hook and unhook global listeners as well. FINISH KEYBOARD RECORD FIRST
+    
     public void record() {
         try {
             GlobalScreen.registerNativeHook();
@@ -45,7 +45,6 @@ public class RecordMain {
 
         }
 
-        // Need to remove the listeners that were added...
         GlobalScreen.removeNativeKeyListener(keyListener);
         GlobalScreen.removeNativeMouseListener(mouseListener);
         GlobalScreen.removeNativeMouseMotionListener(mouseMotionListener);
