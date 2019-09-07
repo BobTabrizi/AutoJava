@@ -47,7 +47,7 @@ public class MouseRecord implements NativeMouseInputListener {
             }
             w.write("MousePress : " + button);
             w.newLine();
-            w.write("Delay : " + timeMs);
+            w.write("Wait " + timeMs);
             w.newLine();
             w.close();
         }
@@ -77,7 +77,7 @@ public class MouseRecord implements NativeMouseInputListener {
                 }
                 w.write("MouseRelease : " + button);
                 w.newLine();
-                w.write("Delay : " + timeMs);
+                w.write("Wait " + timeMs);
                 w.newLine();
                 w.close();
             }
@@ -96,6 +96,7 @@ public class MouseRecord implements NativeMouseInputListener {
                 long prevTime = RecordMain.getTime();
                 RecordMain.setTime(time);
                 time = Math.abs(time - prevTime);
+                System.out.println("the time is: " + time);
                 int timeMs = (int) time;
 
                 BufferedWriter out = new BufferedWriter(new FileWriter(filepath, true));
@@ -104,7 +105,7 @@ public class MouseRecord implements NativeMouseInputListener {
                 int y = e.getY();
                 out.write("Move X: " + x + " Y: " + y);
                 out.newLine();
-                out.write("Delay : " + timeMs);
+                out.write("Wait " + timeMs);
                 out.newLine();
                 out.close();
             } catch (IOException iox) {

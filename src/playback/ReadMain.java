@@ -16,7 +16,8 @@ import org.jnativehook.NativeHookException;
 public class ReadMain extends Gui implements ActionListener {
     public static boolean exit = false;
     public static boolean pause = false;
-    public  String filepath = null;
+    private String filepath = null;
+    public static int percent;
 
     public void play() throws IllegalArgumentException{
         try {
@@ -26,9 +27,10 @@ public class ReadMain extends Gui implements ActionListener {
 
             GlobalScreen.registerNativeHook();
             String input = in.readLine();
-            System.out.println(input);
+            //System.out.println(input);
             int x;
             int y;
+            int counter = 50;
             int button;
             int scroll;
             int keycode;
@@ -38,7 +40,7 @@ public class ReadMain extends Gui implements ActionListener {
             //player.setAutoWaitForIdle(true);
             while(input != null && !exit) {
                 split = input.split(" ");
-                System.err.println("[" + input + "]");
+                //System.err.println("[" + input + "]");
                 if (split[0].equals("Move")) {
                     x = Integer.parseInt(split[2]);
                     y = Integer.parseInt(split[4]);
@@ -66,12 +68,18 @@ public class ReadMain extends Gui implements ActionListener {
                         player.delay(60000);
                     }
                     player.delay(Math.abs(time));
-                    progressBar.setValue(progressBar.getValue() + time / 100);
-                    progressBar.setVisible(true);
+                    //progressBar.setValue(progressBar.getValue() + time / 100);
+                    //progressBar.setValue(40);
+
+
+
                 } else if (split[0].equals("Exit")) {
                     exit = true;
                 }
                 input = in.readLine();
+                //System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                //System.out.println(counter);
+                //counter++;
             }
 
             exit = false;
@@ -93,4 +101,5 @@ public class ReadMain extends Gui implements ActionListener {
             System.exit(1);
         }
     }
+
 }

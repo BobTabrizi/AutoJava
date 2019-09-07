@@ -11,9 +11,11 @@ import org.jnativehook.mouse.NativeMouseEvent;
 import org.jnativehook.mouse.NativeMouseWheelEvent;
 import org.jnativehook.mouse.NativeMouseWheelListener;
 import javax.swing.*;
-import java.awt.FlowLayout;
+import java.awt.*;
 import java.awt.event.*;
-import java.awt.BorderLayout;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Formatter;
 import java.util.logging.Level;
@@ -40,6 +42,13 @@ public class Gui extends JFrame implements WindowListener, ActionListener, Prope
     public final static int interval = 1000;
     private Task task;
     private static final Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
+    public int percentage;
+    public ReadMain present;
+    public int taskTime;
+    private String filepath = null;
+    private static boolean exit = false;
+
+
 
 
     class Task extends SwingWorker<Void, Void> {
@@ -48,30 +57,87 @@ public class Gui extends JFrame implements WindowListener, ActionListener, Prope
          */
         @Override
         public Void doInBackground() {
+            /*
+            int looptime = taskSize();
+            int currTime = (int) System.currentTimeMillis();
+            int counts = 100;
+           // System.out.println(currTime);
+            int totalTime = currTime + looptime;
+            //System.out.println("tot" + totalTime);
+            //System.out.println("curr" + currTime);
+            for( int i = 0;i < counts; i++){
+                setProgress(i);
+                System.out.println(i);
+            }
+            //int totalTime = looptime - currTime;
+            System.out.println("loop time is: " + looptime);
+            */
             Random random = new Random();
             int progress = 0;
-            //Initialize progress property.
+            // Initialize progress property.
             setProgress(0);
             while (progress < 100) {
-                //Sleep for up to one second.
+                // Sleep for up to one second.
                 try {
                     Thread.sleep(random.nextInt(1000));
-                } catch (InterruptedException ignore) {}
-                //Make random progress.
-                progress += 10;
-                setProgress(progress);
+                } catch (InterruptedException ignore) {
+                }
+                // Make random progress.
+                progress += random.nextInt(10);
+                setProgress(Math.min(progress, 100));
             }
             return null;
+    }
+
+
+    /*
+     * Executed in event dispatching thread
+     */
+    @Override
+    public void done() {
+        Toolkit.getDefaultToolkit().beep();
+        setCursor(null); //turn off the wait cursor
+        System.out.println("Done");
+        progressBar.setValue(100);
+    }
+
+}
+    public int taskSize() {
+
+        try {
+            filepath = RecordMain.getFilePath();
+            System.out.println(filepath);
+            BufferedReader in = new BufferedReader(new FileReader(filepath));
+            String input = in.readLine();
+            int time;
+            String[] split;
+
+            //player.setAutoWaitForIdle(true);
+            while (input != null && !exit) {
+                split = input.split(" ");
+                //System.err.println("[" + input + "]");
+                //System.out.println(split[1]);
+                if (split[0].equals("Wait")) {
+                    time = Integer.parseInt(split[1]);
+                    this.taskTime += time;
+                } else if (split[0].equals("Exit")) {
+                    exit = true;
+                }
+                input = in.readLine();
+                //System.out.println(input);
+            }
+            //System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+
+            exit = false;
+            in.close();
+        } catch (IOException iox) {
+            System.err.println("Cannot read from " + filepath + ".");
+            System.err.println(iox.getMessage());
+
+            System.exit(1);
         }
-        /*
-         * Executed in event dispatching thread
-         */
-        @Override
-        public void done() {
-            setCursor(null); //turn off the wait cursor
-            System.out.println("Done");
-            progressBar.setValue(0);
-        }
+        System.out.println(taskTime);
+        return taskTime;
     }
 
     public Gui() {
@@ -133,6 +199,17 @@ public class Gui extends JFrame implements WindowListener, ActionListener, Prope
     //Icon sp = new ImageIcon(getClass().getResource("sp.png"));
 
     /**
+     * @param percentage  This method is used to increment the loading bar during playback.
+     */
+    public void setPercentage(int percentage) {
+        //this.progressBar.setValue(percentage);
+        //this.percentage = percentage;
+        this.percentage = percentage;
+    }
+
+
+
+    /**
      * @param event This method is used to determine an action when a menu option is selected.
      */
     public void actionPerformed(ActionEvent event) {
@@ -183,10 +260,10 @@ public class Gui extends JFrame implements WindowListener, ActionListener, Prope
         if (event.getSource() == Play) {
             System.out.println("Play Recording!");
             Play.setEnabled(false);
-            ReadMain present = new ReadMain();
             task = new Task();
             task.addPropertyChangeListener(this);
             task.execute();
+            ReadMain present = new ReadMain();
             present.play();
             Play.setEnabled(true);
         }
@@ -198,6 +275,7 @@ public class Gui extends JFrame implements WindowListener, ActionListener, Prope
     public void propertyChange(PropertyChangeEvent evt) {
         if ("progress" == evt.getPropertyName()) {
             int progress = (Integer) evt.getNewValue();
+            System.out.println("progress is: " + progress);
             progressBar.setValue(progress);
         }
     }
