@@ -50,7 +50,6 @@ public class Gui extends JFrame implements WindowListener, ActionListener, Prope
 
 
 
-
     class Task extends SwingWorker<Void, Void> {
         /*
          * Main task. Executed in background thread.
